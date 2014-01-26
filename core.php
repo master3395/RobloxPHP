@@ -80,12 +80,12 @@ function getFinalRedirect($url)
 
 function get_inner_html($string, $start, $end)
 {
-    $string = " ".$string;
-    $pos = strpos($string,$start);
-    if ($pos == 0) return "";
-    $pos += strlen($start);
-    $len = strpos($string,$end,$pos) - $pos;
-    return substr($string,$pos,$len);
+	$string = " ".$string;
+	$pos = strpos($string,$start);
+	if ($pos == 0) return "";
+	$pos += strlen($start);
+	$len = strpos($string,$end,$pos) - $pos;	
+	return substr($string,$pos,$len);
 }
 /*
 
@@ -128,75 +128,89 @@ function Roblox_ID($data = array())
     
 function Roblox_BlurbReader($id)
 {
-    $page = file_get_contents_curl('http://www.roblox.com/User.aspx?ID=' . $id);
-    libxml_use_internal_errors(true);
-    $dom = new DomDocument;
-    $dom->loadHTML($page);
-    $xpath = new DomXPath($dom);
-    $nodes = $xpath->query("//div[@class='UserBlurb']");
+	$page = file_get_contents_curl('http://www.roblox.com/User.aspx?ID=' . $id);
+	libxml_use_internal_errors(true);
+	$dom = new DomDocument;
+	$dom->loadHTML($page);
+	$xpath = new DomXPath($dom);
+	$nodes = $xpath->query("//div[@class='UserBlurb']");
 
-    foreach ($nodes as $i => $node) {
+	foreach ($nodes as $i => $node) {
 		return $node->nodeValue;
-    }
+	}
+}
+
+function Roblox_IDToName($id)
+{
+	$page = file_get_contents_curl('http://www.roblox.com/User.aspx?ID=' . $id);
+	libxml_use_internal_errors(true);
+	$dom = new DomDocument;
+	$dom->loadHTML($page);
+	$xpath = new DomXPath($dom);
+	$nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserPane_lUserRobloxURL']");
+
+	foreach ($nodes as $i => $node) {
+		return str_replace("'s Profile", '', $node->nodeValue);
+	}
 }
 
 function Roblox_PublicStats($id)
 {
-    $page = file_get_contents_curl('http://www.roblox.com/User.aspx?ID=' . $id);
-    libxml_use_internal_errors(true);
-    $dom = new DomDocument;
-    $dom->loadHTML($page);
-    $xpath = new DomXPath($dom);
-    $nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lFriendsStatistics']");
+	$page = file_get_contents_curl('http://www.roblox.com/User.aspx?ID=' . $id);
+	libxml_use_internal_errors(true);
+	$dom = new DomDocument;
+	$dom->loadHTML($page);
+	$xpath = new DomXPath($dom);
+	$nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lFriendsStatistics']");
 
-    foreach ($nodes as $i => $node) {
-        $friends = $node->nodeValue;
-    }
+	foreach ($nodes as $i => $node) {
+		$friends = $node->nodeValue;
+	}
 
-    $nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lForumPostsStatistics']");
-    foreach ($nodes as $i => $node) {
-        $forum_posts = $node->nodeValue;
-    }
+	$nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lForumPostsStatistics']");
+		foreach ($nodes as $i => $node) {
+		$forum_posts = $node->nodeValue;
+	}
     
-    $nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lPlaceVisitsStatistics']");
-    foreach ($nodes as $i => $node) {
-        $place_visits = $node->nodeValue;
-    }
+	$nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lPlaceVisitsStatistics']");
+		foreach ($nodes as $i => $node) {
+		$place_visits = $node->nodeValue;
+    	}
     
-    $nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lKillsStatistics']");
-    foreach ($nodes as $i => $node) {
-        $knockouts = $node->nodeValue;
-    }
+    	$nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lKillsStatistics']");
+    	foreach ($nodes as $i => $node) {
+        	$knockouts = $node->nodeValue;
+    	}
     
-    $nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lHighestEverVotingAccuracyStatistics']");
-    foreach ($nodes as $i => $node) {
-        $voting = $node->nodeValue;
-    }
+    	$nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserStatisticsPane_lHighestEverVotingAccuracyStatistics']");
+    		foreach ($nodes as $i => $node) {
+		$voting = $node->nodeValue;
+    	}
     
 
-    $output = array('ID' => $id, 'Friends' => $friends, 'Forum Posts' => $forum_posts, 'Place Visits' => $place_visits, 'Knockouts' => $knockouts, 'Highest Ever Voting AccuracyStatistics' => $voting.'%');
-    return $output; 
+    	$output = array('ID' => $id, 'Friends' => $friends, 'Forum Posts' => $forum_posts, 'Place Visits' => $place_visits, 'Knockouts' => $knockouts, 'Highest Ever Voting AccuracyStatistics' => $voting.'%');
+    	return $output; 
 }
 
 function Roblox_Status($id)
 {
-    $page = file_get_contents_curl('http://www.roblox.com/User.aspx?ID=' . $id);
-    libxml_use_internal_errors(true);
-    $dom = new DomDocument;
-    $dom->loadHTML($page);
-    $xpath = new DomXPath($dom);
-    $nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserPane_lUserOnlineStatus']");
-    $output = array();
+	$page = file_get_contents_curl('http://www.roblox.com/User.aspx?ID=' . $id);
+	libxml_use_internal_errors(true);
+	$dom = new DomDocument;
+	$dom->loadHTML($page);
+	$xpath = new DomXPath($dom);
+	$nodes = $xpath->query("//span[@id='ctl00_cphRoblox_rbxUserPane_lUserOnlineStatus']");
+	$output = array();
 
-    foreach ($nodes as $i => $node) {
-        $output = array('Status' => $node->nodeValue);
-    }
+	foreach ($nodes as $i => $node) {
+		$output = array('Status' => $node->nodeValue);
+	}
 
-    $nodes = $xpath->query("//a[@id='ctl00_cphRoblox_rbxUserPane_UserOnlineStatusHyperLink']");
-    foreach ($nodes as $i => $node) {
-        $output = array('Status' => $node->nodeValue, 'Url' => 'http://roblox.com' . $node->getAttribute('href'));
-    }
-    return $output;   
+	$nodes = $xpath->query("//a[@id='ctl00_cphRoblox_rbxUserPane_UserOnlineStatusHyperLink']");
+	foreach ($nodes as $i => $node) {
+	$output = array('Status' => $node->nodeValue, 'Url' => 'http://roblox.com' . $node->getAttribute('href'));
+	}
+	return $output;   
 }
 
 function Roblox_ListGroups($data = array('id' => '69', 'ally' => true))
@@ -205,28 +219,28 @@ function Roblox_ListGroups($data = array('id' => '69', 'ally' => true))
 	{
 		die('ID not suplied');
 	}
-    $nav = file_get_contents_curl('http://www.roblox.com/Groups/group.aspx?gid='.$data['id']);
-    if(isset($data['ally']) and $data['ally'] == true)
+	$nav = file_get_contents_curl('http://www.roblox.com/Groups/group.aspx?gid='.$data['id']);
+	if(isset($data['ally']) and $data['ally'] == true)
 	{
 		$ally['start'] = '<div id="ctl00_cphRoblox_rbxGroupAlliesPane_RelationshipsUpdatePanel" class="grouprelationshipscontainer">';
-        $ally['end'] = '<div style="text-align:center">';
-        $nav = get_inner_html($nav, $ally['start'], $ally['end']);
+	     	$ally['end'] = '<div style="text-align:center">';
+	    	$nav = get_inner_html($nav, $ally['start'], $ally['end']);
 	}
 	elseif(isset($data['enemy']) and $data['enemy'] == true)
 	{
-	    $enemy['start'] = '<div id="ctl00_cphRoblox_rbxGroupEnemiesPane_RelationshipsUpdatePanel" class="grouprelationshipscontainer">';
-        $enemy['end'] = '<div style="text-align:center">';
-        $nav = get_inner_html($nav, $enemy['start'], $enemy['end']);
+	   	$enemy['start'] = '<div id="ctl00_cphRoblox_rbxGroupEnemiesPane_RelationshipsUpdatePanel" class="grouprelationshipscontainer">';
+	   	$enemy['end'] = '<div style="text-align:center">';
+		$nav = get_inner_html($nav, $enemy['start'], $enemy['end']);
 	}
-    $output = array();
-    $GROUP_COUNT = preg_match_all('/_AssetImage1" alt="(.*?)"/', $nav, $GROUP_NAMES);
-    $i = 0;
-    while ($i<$GROUP_COUNT)
-    {
-        $NAME_RES = preg_match('/title="'.$GROUP_NAMES[1][$i].'" href="(.*?)"/', $nav, $GROUP_ID);
-        array_push($output,array('Name' => $GROUP_NAMES[1][$i], 'ID' => str_replace('Groups/group.aspx?gid=','', $GROUP_ID[1])));
-        $i++;
-    }
-    return $output;
+	$output = array();
+    	$GROUP_COUNT = preg_match_all('/_AssetImage1" alt="(.*?)"/', $nav, $GROUP_NAMES);
+    	$i = 0;
+    	while ($i<$GROUP_COUNT)
+    	{
+        	$NAME_RES = preg_match('/title="'.$GROUP_NAMES[1][$i].'" href="(.*?)"/', $nav, $GROUP_ID);
+		array_push($output,array('Name' => $GROUP_NAMES[1][$i], 'ID' => str_replace('Groups/group.aspx?gid=','', $GROUP_ID[1])));
+        	$i++;
+    	}
+    	return $output;
 }
 ?>
