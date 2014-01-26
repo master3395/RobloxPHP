@@ -23,7 +23,7 @@ else
 }
 
 //Get an user his/her blurb
-echo json_encode(Roblox_BlurbReader('1'));
+echo Roblox_BlurbReader('1');
 
 //Get an user his/her public stats
 echo json_encode(Roblox_PublicStats('1'));
